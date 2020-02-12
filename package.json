@@ -3,7 +3,7 @@
 	"publisher": "james-formica",
 	"displayName": "emoji-log",
 	"description": "console.log with a random emoji",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"engines": {
 		"vscode": "^1.42.0"
 	},
