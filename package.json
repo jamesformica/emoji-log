@@ -3,6 +3,9 @@
 	"publisher": "james-formica",
 	"displayName": "emoji-log",
 	"description": "console.log with a random emoji",
+	"repository": {
+		"url": "https://github.com/jamesformica/emoji-log"
+	},
 	"version": "0.1.0",
 	"engines": {
 		"vscode": "^1.42.0"
