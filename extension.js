@@ -1,6 +1,6 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-const vscode = require('vscode');
+const vscode = require('vscode')
 
 const emojis = require('./emoji')
 
@@ -11,38 +11,61 @@ const emojis = require('./emoji')
  * @param {vscode.ExtensionContext} context
  */
 function activate(context) {
+  // Use the console to output diagnostic information (console.log) and errors (console.error)
+  // This line of code will only be executed once when your extension is activated
+  console.log('Congratulations, your extension "emoji-log" is now active!')
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "emoji-log" is now active!');
+  // The command has been defined in the package.json file
+  // Now provide the implementation of the command with  registerCommand
+  // The commandId parameter must match the command field in package.json
+  let disposable = vscode.commands.registerCommand(
+    'extension.emoji-log',
+    function () {
+      const editor = vscode.window.activeTextEditor
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with  registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('extension.emoji-log', function () {
-		const editor = vscode.window.activeTextEditor
+      if (editor) {
+        const selectionIsEmpty = editor.selection.isEmpty
+        editor
+          .edit((edit) => {
+            const emoji = emojis[Math.floor(Math.random() * emojis.length)]
+            if (selectionIsEmpty) {
+              edit.insert(
+                editor.selection.active,
+                `console.log(\'${emoji}\', )`
+              )
+            } else {
+              edit.replace(
+                editor.selection,
+                `console.log(\'${emoji}\', ${editor.document.getText(
+                  editor.selection
+                )})`
+              )
+            }
+          })
+          .then(() => {
+            const cursor = editor.selection.active
+            if (selectionIsEmpty) {
+              const nextCursor = cursor.with(cursor.line, cursor.character - 1)
+              editor.selection = new vscode.Selection(nextCursor, nextCursor)
+            } else {
+              editor.selection = new vscode.Selection(
+                editor.selection.start,
+                editor.selection.end
+              )
+            }
+          })
+      }
+    }
+  )
 
-		if (editor && editor.selection.isEmpty) {
-			editor.edit((edit) => {
-				const emoji = emojis[Math.floor(Math.random() * emojis.length)]
-
-				edit.insert(editor.selection.active, `console.log(\'${emoji}\', )`)
-			}).then(() => {
-				const cursor = editor.selection.active
-				const nextCursor = cursor.with(cursor.line, cursor.character - 1)
-				editor.selection = new vscode.Selection(nextCursor, nextCursor)
-			})
-		}
-	});
-
-	context.subscriptions.push(disposable);
+  context.subscriptions.push(disposable)
 }
-exports.activate = activate;
+exports.activate = activate
 
 // this method is called when your extension is deactivated
-function deactivate() { }
+function deactivate() {}
 
 module.exports = {
-	activate,
-	deactivate
+  activate,
+  deactivate,
 }
