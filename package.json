@@ -6,17 +6,14 @@
 	"repository": {
 		"url": "https://github.com/jamesformica/emoji-log"
 	},
-	"version": "0.1.2",
+	"version": "0.1.3",
 	"engines": {
-		"vscode": "^1.42.0"
+		"vscode": "^1.75.0"
 	},
 	"categories": [
 		"Other"
 	],
 	"icon": "images/icon.png",
-	"activationEvents": [
-		"onCommand:extension.emoji-log"
-	],
 	"main": "./extension.js",
 	"contributes": {
 		"commands": [
