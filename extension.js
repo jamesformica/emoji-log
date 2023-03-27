@@ -34,11 +34,13 @@ function activate(context) {
                 `console.log(\'${emoji}\', )`
               )
             } else {
+              const currentSelection = editor.document.getText(editor.selection)
+              const currentLine = editor.document.lineAt(editor.selection.start)
+              const currentLineText = currentLine.text
+
               edit.replace(
-                editor.selection,
-                `console.log(\'${emoji}\', ${editor.document.getText(
-                  editor.selection
-                )})`
+                currentLine.rangeIncludingLineBreak,
+                `${currentLineText}\nconsole.log(\'${emoji}\', ${currentSelection})\n`
               )
             }
           })
@@ -52,6 +54,9 @@ function activate(context) {
                 editor.selection.start,
                 editor.selection.end
               )
+
+              // Format document after adding new line
+              vscode.commands.executeCommand('editor.action.formatDocument')
             }
           })
       }
