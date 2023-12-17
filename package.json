@@ -6,7 +6,7 @@
 	"repository": {
 		"url": "https://github.com/jamesformica/emoji-log"
 	},
-	"version": "0.1.3",
+	"version": "0.2.0",
 	"engines": {
 		"vscode": "^1.75.0"
 	},
@@ -21,7 +21,26 @@
 				"command": "extension.emoji-log",
 				"title": "Emoji Log 🔥"
 			}
-		]
+		],
+		"configuration": {
+			"type": "object",
+			"title": "emoji-log",
+			"properties": {
+				"Emoji Log.emojiList": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"default": [],
+					"description": "Custom list of emojis to be used by emoji-log. You can also put non-emoji strings here."
+				},
+				"Emoji Log.logFormat": {
+					"type": "string",
+					"default": "console.log('$EMOJI', $CURSOR)",
+					"description": "The format of the log statement. $EMOJI will be replaced with a random emoji and the cursor will be placed at $CURSOR."
+				}
+			}
+		}
 	},
 	"scripts": {
 		"lint": "eslint .",
