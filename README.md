@@ -9,3 +9,7 @@ Simply click the "install" button above (in VSCode marketplace) to add it as an 
 ## Usage
 
 Type `cmd` + `shift` + `p` to bring up the command list and start typing "Emoji log". Then all you gotta do is click it!
+
+To customize the list of emojis used, add emojis to the `Emoji Log: Emoji List` setting.
+
+To change the log format or cursor placement, use the `Emoji Log: Log Format` setting. For example, you might want to use the format `puts "$EMOJI #{$CURSOR}"` in a Ruby workspace.

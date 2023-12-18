@@ -2,7 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode')
 
-const emojis = require('./emoji')
+const defaultEmojiList = require('./emoji')
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -22,32 +22,63 @@ function activate(context) {
     'extension.emoji-log',
     function () {
       const editor = vscode.window.activeTextEditor
+      const config = vscode.workspace.getConfiguration('Emoji Log')
+
+      const userEmojiList = config.get('emojiList')
+      const emojis =
+        userEmojiList.length > 0 ? userEmojiList : defaultEmojiList
+
+      const logFormat = config.get('logFormat')
+
+      const cursorTemplate = '$CURSOR'
+      const emojiTemplate = '$EMOJI'
+
+      const emoji = emojis[Math.floor(Math.random() * emojis.length)]
 
       if (editor) {
         const selectionIsEmpty = editor.selection.isEmpty
         editor
           .edit((edit) => {
-            const emoji = emojis[Math.floor(Math.random() * emojis.length)]
             if (selectionIsEmpty) {
               edit.insert(
                 editor.selection.active,
-                `console.log(\'${emoji}\', )`
+                logFormat
+                  .replace(cursorTemplate, '')
+                  .replace(emojiTemplate, emoji)
               )
             } else {
               const currentSelection = editor.document.getText(editor.selection)
               const currentLine = editor.document.lineAt(editor.selection.start)
               const currentLineText = currentLine.text
 
+              const emojiLog = logFormat
+                .replace(cursorTemplate, currentSelection)
+                .replace(emojiTemplate, emoji)
+
               edit.replace(
                 currentLine.rangeIncludingLineBreak,
-                `${currentLineText}\nconsole.log(\'${emoji}\', ${currentSelection})\n`
+                `${currentLineText}\n${emojiLog}\n`
               )
             }
           })
           .then(() => {
             const cursor = editor.selection.active
             if (selectionIsEmpty) {
-              const nextCursor = cursor.with(cursor.line, cursor.character - 1)
+              const logFormatWithEmoji = logFormat.replace(
+                emojiTemplate,
+                emoji
+              )
+
+              const cursorDistanceFromEnd =
+                logFormatWithEmoji.length -
+                logFormatWithEmoji.indexOf(cursorTemplate) -
+                cursorTemplate.length
+
+              const nextCursor = cursor.with(
+                cursor.line,
+                cursor.character - cursorDistanceFromEnd
+              )
+
               editor.selection = new vscode.Selection(nextCursor, nextCursor)
             } else {
               editor.selection = new vscode.Selection(
